@@ -73,3 +73,7 @@ class playList:
             if current==self.tail:
                 break
             current=current.next
+def testcase():
+    pass
+if __name__=='__main__':
+    testcase()
