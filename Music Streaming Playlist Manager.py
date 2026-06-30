@@ -73,6 +73,53 @@ class playList:
             if current==self.tail:
                 break
             current=current.next
+    class RecentlyPlayed:
+        def __init__(self):
+            self.stack = []
+
+        def push(self, song):
+            self.stack.append(song)
+
+        def pop(self):
+            if self.isEmpty():
+                return None
+            return self.stack.pop()
+
+        def peek(self):
+            return self.stack[-1] if not self.isEmpty() else None
+
+        def isEmpty(self):
+            return len(self.stack) == 0
+
+        # Linear Search - O(n)
+        def hasPlayed(self, song_id):
+            for s in self.stack:
+                if s.id == song_id:
+                    return True
+            return False
+        def sortHistory(self):
+            def merge_sort(arr):
+                if len(arr) <= 1:
+                    return arr
+                mid = len(arr) // 2
+                left = merge_sort(arr[:mid])
+                right = merge_sort(arr[mid:])
+                return merge(left, right)
+
+            def merge(l, r):
+                result = []
+                i = j = 0
+                while i < len(l) and j < len(r):
+                    if l[i].played_at >= r[j].played_at:
+                        result.append(l[i])
+                        i += 1
+                    else:
+                        result.append(r[j])
+                        j += 1
+                return result + l[i:] + r[j:]
+
+            return merge_sort(self.stack)
+
 def testcase():
     pass
 if __name__=='__main__':
