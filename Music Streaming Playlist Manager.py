@@ -1,5 +1,32 @@
 import random
 
+def read_file(file_path):
+    try:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            line = file.readline()
+        return eval(line.strip())
+    except FileNotFoundError:
+        print(f"Error: The file '{file_path}' was not found. Creating a new one...")
+        return []
+
+def write_file(file_path, playlist_cll):
+    try:
+        song_list = []
+        if not playlist_cll.isEmpty():
+            current = playlist_cll.tail.next
+            while True:
+                song_list.append((
+                    current.data.song_id, current.data.title, 
+                    current.data.artist, current.data.duration, current.data.genre
+                ))
+                if current == playlist_cll.tail:
+                    break
+                current = current.next
+        with open(file_path, 'w', encoding='utf-8') as file:
+            file.write(str(song_list))
+    except Exception as e:
+        print(f"An error occurred while writing to the file: {e}")
+
 #CORE CLASSES (Song & SongNode)
     
 class Song:
@@ -143,16 +170,13 @@ class MusicPlayer:
     def __init__(self):
         self.playlist = playList()
         self.history = RecentlyPlayedStack()
+        self.file_path = "data_project.txt"
 
-    def load_sample_data(self):
-        songs = [
-            Song("S01", "Sunset Drive", "Vaporwave King", 215, "Vaporwave"),
-            Song("S02", "Neon Nights", "Synthwave Boy", 260, "Synthwave"),
-            Song("S03", "Midnight Rain", "Lo-Fi Girl", 180, "Lo-Fi"),
-            Song("S04", "Coastal Highway", "Vaporwave King", 300, "Vaporwave")
-        ]
-        for s in songs:
-            self.playlist.addSong(s)
+    def load_data_from_file(self):  # Thay thế hoàn toàn hàm load_sample_data cũ
+        raw_data = read_file(self.file_path)
+        for song_info in raw_data:
+            song_obj = Song(song_info[0], song_info[1], song_info[2], song_info[3], song_info[4])
+            self.playlist.addSong(song_obj)
 
     def play_current(self):
         if self.playlist.isEmpty():
@@ -215,12 +239,22 @@ class MusicPlayer:
         self.playlist.current_track = random_node
         print(f"🔀 Shuffle Triggered!")
         self.play_current()
+    
+    def add_new_song(self, song):
+        self.playlist.addSong(song)
+        write_file(self.file_path, self.playlist)
+
+    def remove_song_by_id(self, song_id):
+        removed = self.playlist.removeSong(song_id)
+        if removed:
+            write_file(self.file_path, self.playlist)
+            print(f"--- Successfully removed: {removed} ---")
 
 # MENU CHẠY THỬ
 
 def main():
     player = MusicPlayer()
-    player.load_sample_data()
+    player.load_data_from_file()
 
     while True:
         print("\n=== MUSIC STREAMING PLAYLIST MANAGER ===")
@@ -250,10 +284,11 @@ def main():
             s_artist = input("  Artist: ")
             s_duration = int(input("  Duration: "))
             s_genre = input("  Genre: ")
-            player.playlist.addSong(Song(s_id, s_title, s_artist, s_duration, s_genre))
+            player.add_new_song(Song(s_id, s_title, s_artist, s_duration, s_genre))
         elif choice == "5":
             r_id = input("Enter Song ID to remove: ")
-            player.playlist.removeSong(r_id)
+            # Sửa dòng bên dưới:
+            player.remove_song_by_id(r_id)
         elif choice == "0":
             break
         else:
