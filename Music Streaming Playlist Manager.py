@@ -14,7 +14,6 @@ class SongNode:
         self.next = _next
     def display(self):
         self.data.display()
-
 class playList:
     def __init__(self):
         self.tail=None
