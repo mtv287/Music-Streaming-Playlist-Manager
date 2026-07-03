@@ -40,7 +40,7 @@ class Song:
     def __str__(self):
         return f"({self.song_id}, {self.title}, {self.artist}, {self.duration}s, {self.genre})"
 
-class songNode:  # Giữ nguyên từ code của bạn bạn
+class songNode: 
     def __init__(self,_data,_next):
         self.data=_data
         self.next=_next
