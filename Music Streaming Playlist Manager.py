@@ -202,14 +202,65 @@ class RecentlyPlayedStack:
                 current = current.next
         print("=========")
 
+class QueueNode:
+    def __init__(self, info, priority):
+        self.info = info          # Đối tượng Song
+        self.priority = priority  # Độ ưu tiên: Số nhỏ (1, 2,...) được phát trước
+        self.next = None
+
+class PriorityQueue:
+    def __init__(self):
+        self.front = None
+
+    def is_empty(self):
+        return self.front is None
+
+    def enqueue(self, song, priority):
+        """Chèn và tự động sắp xếp bài hát theo độ ưu tiên tăng dần"""
+        new_node = QueueNode(song, priority)
+        if self.is_empty() or priority < self.front.priority:
+            new_node.next = self.front
+            self.front = new_node
+        else:
+            current = self.front
+            while current.next is not None and current.next.priority <= priority:
+                current = current.next
+            new_node.next = current.next
+            current.next = new_node
+
+    def dequeue(self):
+        """Lấy bài hát có độ ưu tiên cao nhất ở đầu hàng đợi ra"""
+        if self.is_empty():
+            return None
+        tmp = self.front
+        self.front = self.front.next
+        return tmp.info
+
+    def display_queue(self):
+        print("Priority Queue Next:")
+        if self.is_empty():
+            print("Empty Queue")
+        else:
+            current = self.front
+            while current:
+                print(f"   [Queue - Priority {current.priority}] {current.info}")
+                current = current.next
+        print("=========")
+
 #CONTROLLER (Kết nối Playlist CLL + Stack Lịch sử + Tính năng Shuffle)
 
 class MusicPlayer:
     def __init__(self):
         self.playlist = playList()
         self.history = RecentlyPlayedStack()
-        self.file_path = "data_project.txt"
-
+        self.queue_next = PriorityQueue()  # Khởi tạo Hàng đợi ưu tiên mới
+        self.song_hash_map = {}            # Bảng băm dùng Dictionary để tìm kiếm O(1)
+    def quick_search_by_id(self, song_id):
+        """Tính năng tìm kiếm sử dụng Bảng băm"""
+        # Tra cứu trực tiếp trong dictionary không cần duyệt vòng lặp CLL
+        if song_id in self.song_hash_map:
+            return self.song_hash_map[song_id]
+        return None
     def load_data_from_file(self):
         raw_data = read_file(self.file_path)
         for song_info in raw_data:
