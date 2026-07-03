@@ -172,7 +172,7 @@ class MusicPlayer:
         self.history = RecentlyPlayedStack()
         self.file_path = "data_project.txt"
 
-    def load_data_from_file(self):  # Thay thế hoàn toàn hàm load_sample_data cũ
+    def load_data_from_file(self):
         raw_data = read_file(self.file_path)
         for song_info in raw_data:
             song_obj = Song(song_info[0], song_info[1], song_info[2], song_info[3], song_info[4])
@@ -188,7 +188,7 @@ class MusicPlayer:
         """Phát bài tiếp theo (CLL) và lưu bài cũ vào Lịch sử (Stack)"""
         if self.playlist.isEmpty():
             return
-        old_song = self.playlist.nextSong() # Gọi hàm của bạn bạn
+        old_song = self.playlist.nextSong()
         if old_song:
             self.history.push(old_song) # Đẩy vào Stack lịch sử
         print(f"⏭️ Skipped Next!")
@@ -287,7 +287,6 @@ def main():
             player.add_new_song(Song(s_id, s_title, s_artist, s_duration, s_genre))
         elif choice == "5":
             r_id = input("Enter Song ID to remove: ")
-            # Sửa dòng bên dưới:
             player.remove_song_by_id(r_id)
         elif choice == "0":
             break
