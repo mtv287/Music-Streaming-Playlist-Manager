@@ -1,3 +1,41 @@
+# ## Phân rã bài toán — Music Streaming Playlist Manager
+
+# **3 tính năng chính cần xây dựng:**
+# - Phát lặp lại (repeat) → dùng **Circular Linked List**
+# - Phát ngẫu nhiên (shuffle) → dùng **Random + CLL**
+# - Quay lại bài trước (go back) → dùng **Stack**
+
+# ---
+
+# ## Phân chia công việc (5 người)
+
+# **Người 1 — Node & Core Class**
+# - Class `Song`: id, title, artist, duration, genre
+# - Class `SongNode`: data (Song), next
+# - Đây là nền cho cả nhóm, nên làm **trước nhất**
+
+# **Người 2 — Circular Linked List**
+# - Class `Playlist`: addSong(), removeSong(), displayAll()
+# - Method `nextSong()` — logic vòng tròn để **phát lặp lại**
+# - Giải thích tại sao CLL phù hợp cho repeat
+
+# **Người 3 — Stack (Recently Played)**
+# - Class `RecentlyPlayed`: push(), pop(), peek(), isEmpty()
+# - push() gọi khi bắt đầu phát, pop() để **quay lại bài trước**
+# - Giải thích LIFO phù hợp với tính năng go back
+
+# **Người 4 — Shuffle & MusicPlayer**
+# - Class `MusicPlayer` kết nối Playlist + RecentlyPlayed
+# - Method `shufflePlay()` cho tính năng **phát ngẫu nhiên**
+# - Method `playSong()`, `skipNext()`, `goBack()`
+
+# **Người 5 — Report & Diagram**
+# - Viết phần mô tả bài toán, lý do chọn cấu trúc dữ liệu
+# - Vẽ sơ đồ quan hệ giữa các class (draw.io hoặc tay)
+# - Tổng hợp, format, kiểm tra lại toàn bộ
+
+
+
 import random
 
 def read_file(file_path):
